@@ -1,15 +1,15 @@
-package fr.wildcodeschool.mediaplugin.player;
+package fr.wildcodeschool.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import fr.wildcodeschool.manager.WildAudioManager;
+import fr.wildcodeschool.manager.WildAudioManagerListener;
+
 import android.util.Log;
 
 import java.io.IOException;
-
-import fr.wildcodeschool.mediaplugin.player.manager.WildAudioManager;
-import fr.wildcodeschool.mediaplugin.player.manager.WildAudioManagerListener;
 
 public class WildPlayer implements WildAudioManagerListener {
   // Activity context
@@ -19,12 +19,15 @@ public class WildPlayer implements WildAudioManagerListener {
   // media player prepared state
   private boolean isPrepared = false;
 
+  private WildAudioManager manager;
+
   public WildPlayer(@NonNull Context ctx) {
     mContext = ctx;
     mPlayer  = new MediaPlayer();
 
     // Register to the audioManager events
-    WildAudioManager.getInstance().setAudioManagerListener(this);
+    manager = new WildAudioManager(mContext);
+    manager.setAudioManagerListener(this);
   }
 
   /**
@@ -68,7 +71,7 @@ public class WildPlayer implements WildAudioManagerListener {
    */
   public boolean play() {
     if (null != mPlayer && isPrepared && !mPlayer.isPlaying()) {
-      if (WildAudioManager.getInstance().requestAudioFocus()) {
+      if (manager.requestAudioFocus()) {
         mPlayer.start();
         return true;
       }
@@ -138,7 +141,7 @@ public class WildPlayer implements WildAudioManagerListener {
   public void release() {
     if (null != mPlayer && isPrepared) {
       mPlayer.release();
-      WildAudioManager.getInstance().releaseAudioFocus();
+      manager.releaseAudioFocus();
     }
   }
 
