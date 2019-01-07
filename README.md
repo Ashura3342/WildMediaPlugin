@@ -1,2 +1,2 @@
-# WildMediaPlayer
-Audio player
+# WildMediaPlugin
+Audio plugin
